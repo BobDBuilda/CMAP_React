@@ -8,6 +8,14 @@ from flask_cors import CORS
 server = Flask(__name__)
 CORS(server, resources={r"/*": {"origins": "http://localhost:5173"}})
 
+
+
+#This is my main entrypoint
+#during the seacrh i want to try the cache first
+#if there is no cache then i will try the postgres server
+#in the instance the query is not found
+#return a resource not found message as json
+
 @server.route('/search', methods=['POST'])
 def search():
     data = request.get_json()
@@ -57,10 +65,6 @@ def check_user_location():
     on_campus = campus_polygon.contains(point)
     return jsonify({"onCampus": on_campus})
 
-
-@server.route('/', methods=['GET'])
-def index():
-    pass
 
 if __name__ == "__main__":
     server.run(debug=True)
