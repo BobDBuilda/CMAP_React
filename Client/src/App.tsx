@@ -2,7 +2,8 @@
 //import reactLogo from './assets/react.svg'
 //import viteLogo from '/vite.svg'
 import './App.css'
-import Map from './Components/Map'
+import MapComponent from './Components/Map';
+//import MapComponent from './Components/Map'
 import Navbar from './Components/Navbar'
 import Sidebar from './Components/Sidebar';
 import { MapProvider } from './Providers/MapProvider';
@@ -15,7 +16,7 @@ const App = () => {
       <MapProvider>
         <SidebarProvider>
           <Navbar />
-          <Map />
+          <MapComponent />
           <Sidebar />
         </SidebarProvider>
       </MapProvider>
