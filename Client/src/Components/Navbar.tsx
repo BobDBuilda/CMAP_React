@@ -2,7 +2,7 @@ import Searchbar from './Searchbar';
 import Menubutton from './Menubutton';
 import Sidebar from './Sidebar';
 import './styles/navbar.css';
-import { useContext } from 'react';
+//import { useContext } from 'react';
 
 const Navbar = () => {
     //const 

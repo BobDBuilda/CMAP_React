@@ -1,51 +1,57 @@
-import { useState, useContext, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { Marker as ReactLeafletMarker } from 'react-leaflet';
-import { Marker as LeafletMarker } from 'leaflet'
+import { useState, useEffect, useRef, use } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import L, { map } from 'leaflet';
 
+const interactionOptions = {
+    zoomControl: true,
+    doubleClickZoom: true,
+    closePopupOnClick: false,
+    dragging: true,
+    zoomSnap: 0,
+    zoomDelta: 0,
+    trackResize: false,
+    touchZoom: false,
+    scrollWheelZoom: false
+};
 
 const Map = () => {
-    //markers are composed of coordinate values
-    //based on how many are in the array render
-    //through a loop into the map
-    
-    //const [coords, setCoords] = useState<number[]>([0, 0]);
-    //const [markers, setMarkers] = useState<typeof ReactLeafletMarker[]>([]);
-    /*
+    const [coords, setCoords] = useState<[number, number]>([0, 0]);
+
     useEffect(() => {
-        navigator.geolocation.watchPosition(
-            async (position) => {
-                await setCoords([position.coords.latitude, position.coords.longitude]);
+        const watchId = navigator.geolocation.watchPosition(
+            (position) => {
+                setCoords([position.coords.latitude, position.coords.longitude]);
             },
-        ),
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-        }
-    }, [coords]);
+            (error) => console.error(error),
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+        return () => navigator.geolocation.clearWatch(watchId);
+    }, []);
 
-    console.log(coords);
+    ////////////////////////////////////////////////////////////////////
     
-    if(coords[0] != 0 && coords[1] != 0){
-        return(
-
-            <MapContainer center={coords} zoom={13} style={{ height: '90vh', width: '100vw' }}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'/>
-                <Marker position={coords}>
-                    <Popup>You</Popup>
-                </Marker>
-            </MapContainer>
-        )
+    if (coords[0] === 0 || coords[1] === 0) {
+        return <div>Loading map...</div>;
     }
-    return(
-        <></>
-    )*/
-    
 
-    
+    return (
+        <MapContainer center={[13.134465, -59.628307]} 
+        zoom={17.5} 
+        style={{ height: '90vh', width: '100%' }}
+        >
+            <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <Marker position={coords}>
+                <Popup>You</Popup>
+            </Marker>
+        </MapContainer>
+    );
 }
-
 export default Map
