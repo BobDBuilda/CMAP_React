@@ -1,0 +1,23 @@
+[2025-11-05 10:30:00] - User request: Change database authentication from 'trust' to require a login.
+[2025-11-05 10:30:01] - Identified target configuration file: pg_hba.conf within the 'mydb' Docker container.
+[2025-11-05 10:30:02] - Copied configuration file from container to host for modification. Command: `docker cp mydb:/var/lib/postgresql/data/pg_hba.conf pg_hba.conf`
+[2025-11-05 10:30:03] - Modified pg_hba.conf: Changed authentication method for local Unix domain socket connections from 'trust' to 'scram-sha-256'.
+[2025-11-05 10:30:04] - Modified pg_hba.conf: Changed authentication method for IPv4 localhost connections from 'trust' to 'scram-sha-256'.
+[2025-11-05 10:30:05] - Modified pg_hba.conf: Changed authentication method for IPv6 localhost connections from 'trust' to 'scram-sha-256'.
+[2025-11-05 10:30:06] - Copied modified configuration file back to container. Command: `docker cp pg_hba.conf mydb:/var/lib/postgresql/data/pg_hba.conf`
+[2025-11-05 10:30:07] - Reloaded PostgreSQL configuration to apply changes. Command: `docker exec -u postgres mydb pg_ctl reload`
+[2025-11-05 10:30:08] - Successfully applied changes. Database now requires password authentication for all connections.
+[2025-11-05 10:35:00] - User request: Remember project root directory for persistent context.
+[2025-11-05 10:35:01] - Saved fact to long-term memory: "The user's project root directory is C:\Users\nikol\Desktop\Project_Folder\CMAP_React"
+[2025-11-05 10:40:00] - User successfully logged in to the PostgreSQL container using credentials from .env.
+[2025-11-05 11:00:00] - User request: Troubleshoot failing service at localhost:5000.
+[2025-11-05 11:00:01] - Checked Docker container status. Server container was running.
+[2025-11-05 11:00:02] - Checked server container logs. Found 'FATAL: password authentication failed for user "postgres"'.
+[2025-11-05 11:00:03] - Investigated application code. Corrected path to .env file in `DB_controller.py`.
+[2025-11-05 11:00:04] - Rebuilt and restarted server container. Error persisted.
+[2025-11-05 11:00:05] - Modified `docker-compose.yaml` to use `env_file` directive. Rebuilt and restarted. Error persisted.
+[2025-11-05 11:00:06] - Modified `DB_controller.py` to create connection string inside function. Rebuilt and restarted. Error persisted.
+[2025-11-05 11:00:07] - Simplified password to 'password' in `.env` and `docker-compose.yaml`. Rebuilt and restarted. Error persisted.
+[2025-11-05 11:00:08] - Reverted password changes in `.env` and `docker-compose.yaml`.
+[2025-11-05 11:00:09] - Concluded troubleshooting. Unable to resolve authentication issue. Advised user to attempt manual database connection from within the container.
+[2025-11-05 11:30:00] - Modified backend/index.py: Changed 'host="localhost"' to 'host="0.0.0.0"' in server.run() to make the Flask server accessible from outside the Docker container.

@@ -1,19 +1,18 @@
-import Searchbar from './Searchbar';
-import Menubutton from './Menubutton';
-import Sidebar from './Sidebar';
+// import Searchbar from './Searchbar';
+// import Menubutton from './Menubutton';
+// import Sidebar from './Sidebar';
 import './styles/navbar.css';
-//import { useContext } from 'react';
+//import { useMapContext } from '../Context/MapContext';
+//import { LatLngBoundsExpression } from 'leaflet';
 
-const Navbar = () => {
-    //const 
 
+const Navbar = ({ children }: { children?: React.ReactNode }) => {
+    
     return(
-        <nav className='navbar'>
-            <Searchbar />
-            <Menubutton />
-            <Sidebar />
-        </nav>
+        <div className='navbar'>
+            {children}
+        </div>
     )
 }
 
-export default Navbar
+export default Navbar;

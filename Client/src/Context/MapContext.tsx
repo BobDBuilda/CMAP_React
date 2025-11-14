@@ -1,29 +1,58 @@
-import { createContext, useContext } from "react";
-import L from "leaflet";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
-export interface Marker {
-    id: string;
-    position: [number, number];
-    title: string;
-}   
-
-export interface MapContextType{
-    center: [number, number];
-    zoom: number;
-    setCenter: (coords: [number, number]) => void;
-    setZoom: (level: number) => void;
-
-    markers: Array<{ id: string; position: [number, number]; title: string }>;
-    addMarker: ( id: string, position: [number, number], title: string ) => void;
-    removeMarker: ( id: string ) => void;
+interface IMapContext {
+    markers: {
+      name: string;
+      lat: number;
+      lng: number;
+    }[];
+    addMarker: (marker: {
+      name: string;
+      lat: number;
+      lng: number;
+    }) => void;
+    removeMarker: (name: string) => void;
 }
 
-export const MapContext = createContext<MapContextType | null>(null);
+const MapContext = createContext<IMapContext | undefined>(undefined);
 
-export const useMapContext = () => {
-    const context = useContext(MapContext);
-    if (!context) {
-        throw new Error("useMapContext must be used within a MapProvider");
-    }
-    return context;
+const useMapContext = () => {
+  return useContext(MapContext);
 }
+
+// The provider component must accept 'children' to wrap other components.
+const MapProvider = ({ children }: { children: ReactNode }) => {
+  // 1. State is created here to hold the markers.
+  const [markers, setMarkers] = useState<IMapContext['markers']>([]);
+
+  // 2. Functions are defined to modify the state.
+  const addMarker = (marker: { name: string; lat: number; lng: number; }) => {
+    setMarkers((prevMarkers) => [...prevMarkers, marker]);
+  };
+
+  const removeMarker = (name: string) => {
+    setMarkers((prevMarkers) => prevMarkers.filter((marker) => marker.name !== name));
+  };
+
+  // 3. The state and functions are bundled into a 'value' object.
+  const value = {
+    markers,
+    addMarker,
+    removeMarker,
+    useMapContext
+  };
+
+  // 4. The Provider component is returned, passing the value to all its children.
+  return (
+    <MapContext.Provider value={value}>
+      {children}
+    </MapContext.Provider>
+  );
+};
+
+const MapProviderExports = {
+  useMapContext,
+  MapProvider
+}
+
+export default MapProviderExports;

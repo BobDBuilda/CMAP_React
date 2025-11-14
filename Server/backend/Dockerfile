@@ -6,8 +6,10 @@ WORKDIR /app
 
 # Copy requirements file and install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# (Build with project root as build context: run from project root)
 
+RUN pip install --no-cache-dir -r requirements.txt
+COPY .env .
 # Copy application code
 COPY . .
 
@@ -19,4 +21,4 @@ ENV FLASK_APP=index.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 # Run the Flask server
-CMD ["flask", "run"]
+CMD ["python", "index.py"]

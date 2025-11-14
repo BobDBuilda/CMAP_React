@@ -1,27 +1,24 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from backend.config import Config
-from backend.routes.api_routes import api_blueprint
-from backend.controller.DB_conn import init_db_pool
-from backend.controller.cache_controller import init_cache
+from routes.api_routes import api_blueprint
+from controller.DB_controller import init_db_pool
+from controller.cache_controller import init_cache
+import os
 
 server = Flask(__name__)
-CORS(server, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(server, supports_credentials= True, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+#CORS(server, resources={r"/*": {"origins": "*"}})
 
-server.config.from_object(Config)
-
-db_pool = init_db_pool(server.config['DATABASE_URL'])
-cache = init_cache(
-    host=server.config['KEYDB_HOST'],
-    port=server.config['KEYDB_PORT'],
-    password=server.config['KEYDB_PASSWORD']
-)
+db_pool = init_db_pool()
+cache = init_cache()
 
 server.config['DB_POOL'] = db_pool
 server.config['CACHE'] = cache
 
 server.register_blueprint(api_blueprint, url_prefix='/api')
+#CORS(api_blueprint, origins=["http://localhost:5173"])
+
+#CORS(server, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 if __name__ == "__main__":
-    server.run(host="localhost", port=server.config['PORT'], debug=True)
-
+    server.run(host="0.0.0.0", port=5000, debug=True)

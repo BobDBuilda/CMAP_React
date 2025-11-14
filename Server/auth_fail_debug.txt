@@ -1,0 +1,30 @@
+Step-by-Step Authentication Failure Debugging Workflow:
+
+1. **Identify the Scope of Failure:**
+   - **Review Logs:** Isolate authentication error messages from the general application logs. Look for keywords like "FATAL", "authentication failed", "invalid credentials", "access denied", etc.
+   - **Frequency and Timing:** Analyze the timestamps of the errors. Is the failure continuous or intermittent? Does it correlate with specific events like a new deployment, a system update, or a specific user action?
+   - **User Impact:** Are all users affected, or only a specific subset? Is the failure limited to a particular application, service, or geographic region?
+
+2. **Analyze the Error Messages:**
+   - **Error Details:** Examine the full error message for specific details. For example, "password authentication failed for user 'postgres'" indicates an issue with the password for that specific user.
+   - **Connection Details:** Look for information about the connection attempt, such as the source IP address, the database, and the authentication method being used (e.g., "scram-sha-256").
+
+3. **Investigate the Authenticating Service:**
+   - **Configuration:** Review the authentication configuration of the service in question (e.g., `pg_hba.conf` for PostgreSQL). Verify that the configuration allows authentication from the source and for the user/database combination.
+   - **Credentials:** Double-check the credentials being used by the application. Are they stored securely? Have they been rotated recently? Are there any typos or encoding issues?
+   - **Service Status:** Ensure that the authentication service (e.g., database, LDAP server) is running and accessible from the application server. Check for any network connectivity issues, firewalls, or security groups that might be blocking the connection.
+
+4. **Check the Application:**
+   - **Code Review:** Examine the application code that handles authentication. Look for hardcoded credentials, incorrect connection string formats, or logic errors.
+   - **Dependencies:** If the application uses a library or framework for authentication, check for any known bugs or configuration issues with that component.
+   - **Environment Variables:** Verify that all necessary environment variables for authentication are set correctly in the application's environment.
+
+5. **Test and Validate:**
+   - **Manual Connection:** Attempt to connect to the authenticating service manually from the application server using the same credentials and connection parameters. This helps to isolate the issue to the application or the environment.
+   - **Incremental Changes:** If you make changes to the configuration or code, do so one at a time and monitor the logs to see if the change resolves the issue.
+   - **Rollback Plan:** Have a plan to revert any changes if they do not resolve the issue or introduce new problems.
+
+6. **Document and Communicate:**
+   - **Record Findings:** Document the root cause of the authentication failure and the steps taken to resolve it.
+   - **Share Knowledge:** Share the findings with the rest of the team to prevent similar issues in the future.
+   - **Future Prevention:** Consider what changes can be made to the system or processes to prevent this type of failure from happening again. This could include improving monitoring, adding more specific alerts, or implementing more robust authentication mechanisms.

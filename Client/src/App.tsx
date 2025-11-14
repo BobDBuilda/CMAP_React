@@ -1,24 +1,27 @@
-//import { useState } from 'react'
-//import reactLogo from './assets/react.svg'
-//import viteLogo from '/vite.svg'
+//importm { useState }p from 'react'o
+//import reactLogo from './assets/react.svg'r
+//import viteLogo from '/vite.svg't
 import './App.css'
-import MapComponent from './Components/Map';
-//import MapComponent from './Components/Map'
+import MapComponent from './Components/MapComponent';
 import Navbar from './Components/Navbar'
-import Sidebar from './Components/Sidebar';
-import { MapProvider } from './Providers/MapProvider';
-import { SidebarProvider } from './Providers/SidebarProvider';
+import Searchbar from './Components/Searchbar';
+import Menubutton from './Components/Menubutton';
+import MapProviderExports from './Context/MapContext';
+// import Sidebar from './Components/Sidebar';
+//import { MapProvider } from './Context/MapContext';
+//import { SidebarProvider } from './Providers/SidebarProvider';
 
+const { MapProvider } = MapProviderExports;
 
 const App = () => {
   return (
-    <>
-      <MapProvider>
-        <SidebarProvider>
-          <Navbar />
-          <MapComponent />
-          <Sidebar />
-        </SidebarProvider>
+    <> 
+      <MapProvider >
+        <Navbar>
+          <Searchbar />
+          <Menubutton />
+        </Navbar>
+        <MapComponent/> 
       </MapProvider>
     </>
   )

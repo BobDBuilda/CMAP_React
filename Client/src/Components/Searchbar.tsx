@@ -1,38 +1,32 @@
-import { FaSearch } from 'react-icons/fa'
-import { useState, useRef } from 'react'
-import { search } from '../utils.js';
-import { MapContext } from '../Context/MapContext';
-import { useContext } from 'react';
-//import { map } from 'leaflet';
+import { FaSearch } from 'react-icons/fa';
+import { search } from '../utils';
+import { useRef } from 'react';
+import MapProviderExports from '../Context/MapContext';
 
 const Searchbar = () => {
-    const [query, setQuery] = useState('');
-    const searchRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { addMarker } = MapProviderExports.useMapContext();
 
-    const context = useContext(MapContext);
-    if (!context) {
-        throw new Error('Searchbar must be used within a MapProvider');
+    const handleSearch = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        const query = inputRef.current?.value?.trim();
+        console.log("search button clicked");
+        try{
+            const result: {name:string, lat: number, lng: number} | null = await search(query);
+            const data = result['data'];
+            console.log(data);
+            addMarker(data);
+        }catch(error){
+            console.error("search error: ", error);
+        }
     }
-    return(
-        <div className='searchbar'>
-            <input ref={searchRef} type='search' placeholder='where to?' />
-            <button onClick={ async (e) => {
-                e.preventDefault();
-                if(!searchRef.current) throw new Error('searchRef is not assigned yet');
-                const value = searchRef.current.value.trim();
-                setQuery(value);
-                const data = await search(query);
-                if (!data) throw new Error('No data found from search');
 
-                const addMarker = context.addMarker;
-                
-                addMarker(data.id, [data.lat, data.lon], data.display_name);
-                context.setCenter([data.lat, data.lon]);
-                context.setZoom(13);
-                //console.log(data);
-            }}><FaSearch /></button>
-        </div>
+    return(
+        <>
+            <input ref={inputRef} type='text' placeholder="Ml4, LT3 ..."/>
+            <button onClick={handleSearch}><FaSearch/></button>
+        </>
     )
 }
 
-export default Searchbar
+export default Searchbar;
