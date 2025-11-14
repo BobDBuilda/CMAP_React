@@ -6,5 +6,10 @@ class Building(Protocol):
     location: tuple[float, float]  # Latitude, Longitude
     floors: int
 
-    def get_full_address(self) -> str:
-        ...
+
+class Room(Protocol):
+    id: int
+    building_id: int
+    floor: int
+    room_number: str
+    capacity: Optional[int]

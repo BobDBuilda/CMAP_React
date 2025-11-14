@@ -1,0 +1,11 @@
+[2025-11-05 11:40:00] - User requested to install testing packages and write a test case for index.py line 12.
+[2025-11-05 11:40:01] - Identified pytest as the appropriate testing framework.
+[2025-11-05 11:40:02] - Added 'pytest' to backend/requirements.txt.
+[2025-11-05 11:40:03] - Created backend/tests directory.
+[2025-11-05 11:40:04] - Created backend/tests/test_db.py with an initial test case to check db_pool initialization.
+[2025-11-05 11:40:05] - Ran tests. Failed with 'ModuleNotFoundError: No module named 'controller''.
+[2025-11-05 11:40:06] - Explained the need for conftest.py to resolve Python import paths for tests.
+[2025-11-05 11:40:07] - Created backend/tests/conftest.py to add the project root to sys.path.
+[2025-11-05 11:40:08] - Ran tests again. Initial test passed (only checked pool object creation).
+[2025-11-05 11:40:09] - Modified backend/tests/test_db.py to properly test the database connection by attempting to get a connection from the pool.
+[2025-11-05 11:40:10] - Ran tests again. Failed with 'FATAL: password authentication failed', confirming the test now accurately reflects the issue.

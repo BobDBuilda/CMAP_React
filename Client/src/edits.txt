@@ -1,0 +1,63 @@
+## Edits Log
+
+This file details the changes made to the project.
+
+### 1. `client/src/Components/BoundingBox.tsx`
+- **Action:** Created new file.
+- **Purpose:** To render a Leaflet `Rectangle` component based on provided bounds.
+
+### 2. `client/src/Context/MapContext.tsx`
+- **Action:** Modified `MapContextType` interface.
+- **Purpose:** Added `boundingBox: LatLngBoundsExpression | null;` and `setBoundingBox: (bounds: LatLngBoundsExpression | null) => void;` to manage the bounding box state.
+- **Action:** Added `import { LatLngBoundsExpression } from "leaflet";`.
+
+### 3. `client/src/Providers/MapProvider.tsx`
+- **Action:** Modified `MapProvider` component.
+- **Purpose:** Added `const [boundingBox, setBoundingBox] = useState<LatLngBoundsExpression | null>(null);` to manage the bounding box state.
+- **Action:** Included `boundingBox` and `setBoundingBox` in the `MapContext.Provider` value.
+- **Action:** Added `import { LatLngBoundsExpression } from 'leaflet';`.
+
+### 4. `client/src/Components/Navbar.tsx`
+- **Action:** Modified `Navbar` component.
+- **Purpose:** Added a "Toggle Bounding Box" button.
+- **Purpose:** Implemented `toggleBoundingBox` function to set/unset the `boundingBox` state in `MapContext`.
+- **Purpose:** Updated the default bounding box coordinates to `[[13.131227, -59.635482], [13.140227, -59.626282]]`.
+- **Action:** Added `import { useMapContext } from '../Context/MapContext';` and `import { LatLngBoundsExpression } from 'leaflet';`.
+
+### 5. `client/src/Components/Map.tsx`
+- **Action:** Modified `MapContainer` component.
+- **Purpose:** Removed the `iframe` and restored the `TileLayer`.
+- **Purpose:** Set `maxBounds` to `[[13.131227, -59.635482], [13.140227, -59.626282]]` and `maxBoundsViscosity={1.0}` to restrict map panning.
+- **Purpose:** Updated the `center` prop to `[13.135727, -59.630882]`.
+- **Purpose:** Changed `zoom` prop to `17.5`.
+- **Action:** Modified `interactionOptions` by removing `dragging: false`.
+- **Action:** Updated the `zoomend` event listener:
+    - Enabled dragging if `currentZoom >= 17.5`.
+    - Disabled dragging if `currentZoom < 17.5`.
+    - Used `currentZoom` directly from `mapRef.current?.getZoom()`.
+- **Action:** Conditionally rendered `<BoundingBox bounds={boundingBox} />` if `boundingBox` is present in the context.
+- **Action:** Added `import { useMapContext } from '../Context/MapContext';` and `import BoundingBox from './BoundingBox';`.
+- **Action:** Added user location marker.
+- **Purpose:** Uncommented `coords` state and `useEffect` for geolocation.
+- **Purpose:** Added `<Marker position={coords}>` to display user's location.
+
+**Re-application of Bounding Box Check (after user request to redo)**
+- **Action:** Re-applied bounding box check for user's location in `client/src/Components/Map.tsx`.
+- **Purpose:** Ensured that an alert is raised if the user's location falls outside the defined bounding box.
+- **Details:** Imported `LatLngBounds` from `leaflet`. Inside the geolocation `useEffect`, checked if `newCoords` are within `boundingBox` using `boundsObj.contains(newCoords)` and raised an alert if not. Added `boundingBox` and `mapRef` to the dependency array of the geolocation `useEffect`.
+
+**Map Interaction and Zoom Constraints**
+- **Action:** Modified `interactionOptions` in `client/src/Components/Map.tsx`.
+- **Purpose:** Enabled scroll wheel zooming on the map.
+- **Details:** Set `scrollWheelZoom: true`.
+- **Action:** Added `minZoom` to `MapContainer` in `client/src/Components/Map.tsx`.
+- **Purpose:** Enforced a minimum zoom level for the map.
+- **Details:** Set `minZoom={16.5}`.
+
+**Redo: Refactor Geolocation Logic**
+- **Action:** Re-created `client/src/Components/UserLoc.tsx`.
+- **Purpose:** To encapsulate all logic related to user geolocation.
+- **Details:** Moved `coords` state and geolocation `useEffect` from `Map.tsx` to `UserLoc.tsx`. The component renders a `Marker` at the user's location.
+- **Action:** Modified `client/src/Components/Map.tsx`.
+- **Purpose:** To use the new `UserLoc` component.
+- **Details:** Removed `coords` state, geolocation `useEffect`, and user location `Marker`. Added `<UserLoc />` inside `MapContainer`.
